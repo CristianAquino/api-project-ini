@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Article;
-use App\Models\Comment;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -15,13 +13,18 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
-        Article::factory(10)->create();
-        Comment::factory(20)->create();
+        User::factory(10)->create();
+        // Article::factory(10)->create();
+        // Comment::factory(20)->create();
 
         // User::factory()->create([
         //     'name' => 'Test User',
         //     'email' => 'test@example.com',
         // ]);
+
+        $this->call([
+            ArticleSeeder::class,
+            CommentSeeder::class
+        ]);
     }
 }
