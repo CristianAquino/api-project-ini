@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Article;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class ArticleController extends Controller
 {
@@ -14,7 +15,7 @@ class ArticleController extends Controller
     {
         //
         $articles = Article::all();
-        return response()->json($articles);
+        return response()->json($articles, Response::HTTP_OK);
     }
 
     /**
@@ -26,7 +27,7 @@ class ArticleController extends Controller
         Article::create($request->all());
         return response()->json([
             'message' => 'Article created successfully'
-        ]);
+        ], Response::HTTP_CREATED);
     }
 
     /**
@@ -35,7 +36,7 @@ class ArticleController extends Controller
     public function show(Article $article)
     {
         //
-        return response()->json($article);
+        return response()->json($article, Response::HTTP_OK);
     }
 
     /**
@@ -47,7 +48,7 @@ class ArticleController extends Controller
         $article->update($request->all());
         return response()->json([
             'message' => 'Article updated successfully'
-        ]);
+        ], Response::HTTP_ACCEPTED);
     }
 
     /**
@@ -59,6 +60,6 @@ class ArticleController extends Controller
         $article->delete();
         return response()->json([
             'message' => 'Article deleted successfully'
-        ]);
+        ], Response::HTTP_ACCEPTED);
     }
 }

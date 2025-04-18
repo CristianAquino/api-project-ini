@@ -16,15 +16,17 @@ class Article extends Model
     protected $fillable = [
         'title',
         'content',
+        'user_id',
     ];
 
-    // function user(): BelongsTo
-    // {
-    //     return $this->belongsTo(User::class);
-    // }
 
-    // function comments(): HasMany
-    // {
-    //     return $this->hasMany(Comment::class);
-    // }
+    // relations
+    function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+    function comments(): HasMany
+    {
+        return $this->hasMany(Comment::class);
+    }
 }

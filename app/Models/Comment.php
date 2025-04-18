@@ -12,14 +12,18 @@ class Comment extends Model
     use HasFactory;
 
     protected $fillable = [
-        'comment'
+        'comment',
+        'user_id',
+        'article_id',
     ];
-    // function user(): BelongsTo
-    // {
-    //     return $this->belongsTo(User::class);
-    // }
-    // function article(): BelongsTo
-    // {
-    //     return $this->belongsTo(Article::class);
-    // }
+
+    // relations
+    function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+    function article(): BelongsTo
+    {
+        return $this->belongsTo(Article::class);
+    }
 }
