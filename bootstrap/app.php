@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Middleware\AuthenticateWithCookieMiddleware;
+use App\Http\Middleware\JWTMiddleware;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
@@ -13,6 +15,10 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         //
+        $middleware->alias([
+            'auth_cookie' => AuthenticateWithCookieMiddleware::class,
+            'jwt_valid' => JWTMiddleware::class
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
