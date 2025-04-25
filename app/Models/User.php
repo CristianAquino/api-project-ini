@@ -6,6 +6,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -75,5 +76,9 @@ class User extends Authenticatable implements JWTSubject
     function comments(): HasMany
     {
         return $this->hasMany(Comment::class);
+    }
+    function categories(): BelongsToMany
+    {
+        return $this->belongsToMany(Category::class);
     }
 }
