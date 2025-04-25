@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\DTOs\ArticleDTO;
 use App\Models\Article;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -14,8 +15,10 @@ class ArticleController extends Controller
     public function index()
     {
         //
-        $articles = Article::all();
-        return response()->json($articles, Response::HTTP_OK);
+        $articles = Article::query()
+            ->paginate(10);
+        $articlesDTO = ArticleDTO::fromPagination($articles);
+        return response()->json($articlesDTO, Response::HTTP_OK);
     }
 
     /**
@@ -36,7 +39,8 @@ class ArticleController extends Controller
     public function show(Article $article)
     {
         //
-        return response()->json($article, Response::HTTP_OK);
+        $articleDTO = ArticleDTO::fromBaseModel($article);
+        return response()->json($articleDTO, Response::HTTP_OK);
     }
 
     /**

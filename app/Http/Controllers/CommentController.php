@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\DTOs\CommentDTO;
 use App\Models\Comment;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class CommentController extends Controller
 {
@@ -13,8 +15,10 @@ class CommentController extends Controller
     public function index()
     {
         //
-        $comments = Comment::all();
-        return response()->json($comments);
+        $comments = Comment::query()
+            ->paginate(10);
+        $commentsDTO = CommentDTO::fromPagination($comments);
+        return response()->json($commentsDTO, Response::HTTP_OK);
     }
 
     /**
@@ -35,7 +39,8 @@ class CommentController extends Controller
     public function show(Comment $comment)
     {
         //
-        return response()->json($comment);
+        $commentDTO = CommentDTO::fromBaseModel($comment);
+        return response()->json($commentDTO, Response::HTTP_OK);
     }
 
     /**

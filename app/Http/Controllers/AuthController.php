@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\User;
+use Illuminate\Support\Facades\Cookie;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
@@ -15,13 +17,18 @@ class AuthController extends Controller
         $credentials = $request->only('email', 'password');
 
         if (!$token = JWTAuth::attempt($credentials)) {
-            return response()->json(['error' => 'Invalid credentials'], 401);
+            return response()->json(
+                ['error' => 'Invalid credentials'],
+                Response::HTTP_UNAUTHORIZED
+            );
         }
+
+        $cookie = cookie('api_token', $token, 60 * 24);
 
         return response()->json([
             'token' => $token,
             'user' => Auth::user(),
-        ]);
+        ])->cookie($cookie);
     }
 
     public function register(Request $request)
@@ -49,12 +56,8 @@ class AuthController extends Controller
     public function logout()
     {
         Auth::logout();
-        return response()->json(['message' => 'Successfully logged out']);
-    }
-
-    public function me()
-    {
-        return response()->json(Auth::user());
+        $cookie = Cookie::forget('api_token');
+        return response()->json(['message' => 'Successfully logged out'])->cookie($cookie);
     }
 
     public function refresh()
