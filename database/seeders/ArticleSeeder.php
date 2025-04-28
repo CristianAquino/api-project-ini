@@ -5,9 +5,7 @@ namespace Database\Seeders;
 use App\Models\Article;
 use App\Models\Category;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Faker\Factory as Faker;
 
 class ArticleSeeder extends Seeder
 {
@@ -18,18 +16,14 @@ class ArticleSeeder extends Seeder
     {
         //
         $users = User::all();
-        $faker = Faker::create();
         $categories = Category::all();
 
         foreach ($users as $user) {
-            for ($i = 0; $i < rand(2, 5); $i++) {
-                Article::create([
-                    'title' => $faker->sentence(3),
-                    'content' => $faker->paragraphs(3, true),
+            Article::factory(rand(2, 5))
+                ->create([
                     'user_id' => $user->id,
                     'category_id' => $categories->random()->id
                 ]);
-            }
         }
     }
 }

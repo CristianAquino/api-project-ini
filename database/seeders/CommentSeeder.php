@@ -5,9 +5,7 @@ namespace Database\Seeders;
 use App\Models\Article;
 use App\Models\Comment;
 use App\Models\User;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Faker\Factory as Faker;
 
 
 class CommentSeeder extends Seeder
@@ -20,17 +18,15 @@ class CommentSeeder extends Seeder
         //
         $users = User::all();
         $articles = Article::all();
-        $faker = Faker::create();
 
-        foreach ($articles as $article) {
-            for ($i = 0; $i < rand(0, 5); $i++) {
-                # code...
-                Comment::create([
-                    'comment' => $faker->paragraph,
+        for ($i = 0; $i < count($articles); $i++) {
+            # code...
+            $article = fake()->randomElements($articles, 1, true);
+            Comment::factory(rand(1, 3))
+                ->create([
                     'user_id' => $users->random()->id,
-                    'article_id' => $article->id,
+                    'article_id' => $article[0]->id
                 ]);
-            }
         }
     }
 }
