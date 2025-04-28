@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Support\Facades\Auth;
 
 class Comment extends Model
 {
@@ -13,9 +14,8 @@ class Comment extends Model
 
     protected $fillable = [
         'comment',
-        'user_id',
-        'article_id',
     ];
+
 
     // relations
     function user(): BelongsTo
@@ -25,5 +25,19 @@ class Comment extends Model
     function article(): BelongsTo
     {
         return $this->belongsTo(Article::class);
+    }
+
+    // este metodo sirve para que cada vez
+    // que creamos un comentario, el id del
+    // usuario identificado sea setiado
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($comment) {
+            if (Auth::check()) {
+                $comment->user_id = Auth::id();
+            }
+        });
     }
 }
