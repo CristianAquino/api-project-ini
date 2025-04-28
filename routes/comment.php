@@ -5,9 +5,9 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::controller(CommentController::class)->group(function () {
-    Route::get('/', 'index');
-    Route::get('/{comment}', 'show');
-    Route::post('/', 'store');
-    Route::put('/{comment}', 'update');
-    Route::delete('/{comment}', 'destroy');
+    Route::get('/{article}', 'index');
+    Route::get('/{article}/{comment}', 'show');
+    Route::post('/{article}', 'store');
+    Route::put('/{article}/{comment}', 'update');
+    Route::delete('/{article}/{comment}', 'destroy');
 });

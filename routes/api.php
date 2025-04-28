@@ -9,5 +9,5 @@ Route::prefix('user')
         'jwt_valid'
     ])
     ->group(base_path('routes/user.php'));
-Route::prefix('article')->group(base_path('routes/article.php'));
-Route::prefix('comment')->group(base_path('routes/comment.php'));
+Route::prefix('articles')->group(base_path('routes/article.php'));
+Route::prefix('comments')->group(base_path('routes/comment.php'));
