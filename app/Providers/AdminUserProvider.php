@@ -26,7 +26,8 @@ class AdminUserProvider extends ServiceProvider
             User::create([
                 'name' => 'administrator',
                 'email' => 'admin@admin.com',
-                'password' => '12345678'
+                'password' => '12345678',
+                'role' => User::ROLE_SUPERADMIN
             ]);
         }
     }
