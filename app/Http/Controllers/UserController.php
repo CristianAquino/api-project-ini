@@ -6,6 +6,7 @@ use App\DTOs\UserDTO;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
@@ -28,6 +29,14 @@ class UserController extends Controller
     public function me()
     {
         $user = Auth::user();
+        $response = Gate::inspect('view', $user);
+
+        if (!$response->allowed()) {
+            return response()->json([
+                'message' => $response->message()
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
         $userDTO = UserDTO::fromBaseModel($user);
         return response()->json($userDTO, Response::HTTP_OK);
     }
@@ -46,8 +55,16 @@ class UserController extends Controller
     public function destroy()
     {
         //
-        $me = Auth::id();
-        User::where('id', $me)->delete();
+        $user = Auth::user();
+        $response = Gate::inspect('view', $user);
+
+        if (!$response->allowed()) {
+            return response()->json([
+                'message' => $response->message()
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
+        User::where('id', $user->id)->delete();
         return response()->json([
             'message' => 'User deleted successfully'
         ], Response::HTTP_ACCEPTED);

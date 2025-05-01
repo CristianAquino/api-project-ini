@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\DTOs\ArticleDTO;
 use App\Models\Article;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\Response;
 
 class ArticleController extends Controller
@@ -27,6 +28,14 @@ class ArticleController extends Controller
     public function store(Request $request)
     {
         //
+        $response = Gate::inspect('create', Article::class);
+
+        if (!$response->allowed()) {
+            return response()->json([
+                'message' => $response->message()
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
         Article::create($request->all());
         return response()->json([
             'message' => 'Article created successfully'
@@ -39,6 +48,14 @@ class ArticleController extends Controller
     public function show(Article $article)
     {
         //
+        $response = Gate::inspect('view', $article);
+
+        if (!$response->allowed()) {
+            return response()->json([
+                'message' => $response->message()
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
         $articleDTO = ArticleDTO::fromBaseModel($article);
         return response()->json($articleDTO, Response::HTTP_OK);
     }
@@ -49,6 +66,14 @@ class ArticleController extends Controller
     public function update(Request $request, Article $article)
     {
         //
+        $response = Gate::inspect('update', $article);
+
+        if (!$response->allowed()) {
+            return response()->json([
+                'message' => $response->message()
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
         $article->update($request->all());
         return response()->json([
             'message' => 'Article updated successfully'
@@ -61,6 +86,14 @@ class ArticleController extends Controller
     public function destroy(Article $article)
     {
         //
+        $response = Gate::inspect('delete', Article::class);
+
+        if (!$response->allowed()) {
+            return response()->json([
+                'message' => $response->message()
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
         $article->delete();
         return response()->json([
             'message' => 'Article deleted successfully'

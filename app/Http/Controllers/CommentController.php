@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DTOs\CommentDTO;
+use App\Models\Article;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -12,11 +13,10 @@ class CommentController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Article $article)
     {
         //
-        $comments = Comment::query()
-            ->paginate(10);
+        $comments = $article->comments()->paginate(10);
         $commentsDTO = CommentDTO::fromPagination($comments);
         return response()->json($commentsDTO, Response::HTTP_OK);
     }
@@ -24,10 +24,10 @@ class CommentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, Article $article)
     {
         //
-        Comment::create($request->all());
+        $article->comments()->save(new Comment($request->all()));
         return response()->json([
             'message' => 'Comment created successfully'
         ]);
@@ -36,9 +36,10 @@ class CommentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Comment $comment)
+    public function show(Article $article, Comment $comment)
     {
         //
+        $comment = $article->comments()->find($comment->id);
         $commentDTO = CommentDTO::fromBaseModel($comment);
         return response()->json($commentDTO, Response::HTTP_OK);
     }
@@ -46,7 +47,7 @@ class CommentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Comment $comment)
+    public function update(Request $request, Article $article, Comment $comment)
     {
         //
         $comment->update($request->all());
@@ -58,9 +59,10 @@ class CommentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Comment $comment)
+    public function destroy(Article $article, Comment $comment)
     {
         //
+        $comment = $article->comments()->find($comment->id);
         $comment->delete();
         return response()->json([
             'message' => 'Comment deleted successfully'
