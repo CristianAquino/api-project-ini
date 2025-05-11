@@ -1,0 +1,106 @@
+Table comments {
+  id integer [primary key]
+  comment text
+  user_id uuid [not null]
+  article_id uuid [not null]
+  parent_id integer [null]
+  created_at timestamp
+  updated_at timestamp
+  Note: 'Relación one-to-many. parent_id y id para realizar las replicas'
+}
+
+Table users {
+  id uuid [primary key]
+  username varchar
+  role_id integer
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table roles {
+  id integer [primary key]
+  code varchar [unique, not null]
+  role text [unique, not null]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table articles {
+  id uuid [primary key]
+  title varchar
+  content text
+  user_id uuid [not null]
+  category_id integer [not null]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table categories {
+  id integer [primary key]
+  category varchar
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table category_user {
+  id integer [primary key]
+  category_id integer [not null]
+  user_id uuid [not null]
+  created_at timestamp
+  updated_at timestamp
+}
+
+Table likes {
+  id int [primary key]
+  user_id uuid 
+  likeable_id int
+  likeable_type varchar
+  created_at datetime
+  updated_at datetime
+  Note: 'Relación polimórfica. likeable_id y likeable_type apuntan a comments, articles'
+}
+
+Table subscriptions {
+  id int [primary key]
+  subscriber_id uuid
+  author_id uuid 
+  created_at datetime
+  updated_at datetime
+  Note: "Relación muchos a muchos entre usuarios. subscriber_id sigue a author_id"
+}
+
+Table images {
+  id integer [primary key]
+  url varchar [not null]
+  imageable_id integer [not null]
+  imageable_type varchar [not null]
+  created_at timestamp
+  updated_at timestamp
+  Note: 'Relación polimórfica con users y articles'
+}
+
+Table notifications {
+  id integer [primary key]
+  recipient_id uuid [not null]          // usuario que recibe la notificación
+  sender_id uuid [not null]             // usuario que realizó la acción (like, comentario, etc.)
+  notifiable_id integer [not null]      // ID del recurso afectado (artículo o comentario)
+  notifiable_type varchar [not null]    // Tipo de recurso ("articles", "comments")
+  type varchar [not null]               // Tipo de notificación ("like", "new_article", etc.)
+  created_at timestamp
+  updated_at timestamp
+  Note: 'Notifica al usuario que recibió un like o una suscripción'
+}
+
+ref: users.id < comments.user_id
+ref: articles.id < comments.article_id
+ref: users.id < articles.user_id
+ref: categories.id < articles.category_id
+ref: categories.id < category_user.category_id
+ref: users.id < category_user.user_id
+ref: users.id < likes.user_id
+ref: users.id < subscriptions.subscriber_id
+ref: users.id < subscriptions.author_id
+ref: comments.id < comments.parent_id
+ref: roles.id < users.role_id
+ref: users.id < notifications.recipient_id
+ref: users.id < notifications.sender_id
