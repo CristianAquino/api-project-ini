@@ -1,6 +1,5 @@
 <?php
 
-use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -14,7 +13,8 @@ return new class extends Migration
     {
         //
         Schema::table('users', function (Blueprint $table) {
-            $table->string('role')->default(User::ROLE_USER);
+            $table->string('username', 32);
+            $table->foreignId('role_id')->constrained('roles')->cascadeOnDelete();
         });
     }
 
@@ -25,7 +25,8 @@ return new class extends Migration
     {
         //
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('role');
+            $table->dropColumn(['username']);
+            $table->dropForeign(['role_id']);
         });
     }
 };
