@@ -13,8 +13,10 @@ return new class extends Migration
     {
         //
         Schema::table('comments', function (Blueprint $table) {
-            $table->foreignUuid('article_id')->constrained('articles')->cascadeOnDelete();
             $table->foreignUuid('user_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignUuid('article_id')->constrained('articles')->cascadeOnDelete();
+            // id for comment replies
+            $table->foreignId('parent_id')->nullable()->constrained('comments')->cascadeOnDelete();
         });
     }
 
@@ -27,6 +29,7 @@ return new class extends Migration
         Schema::table('comments', function (Blueprint $table) {
             $table->dropForeign(['user_id']);
             $table->dropForeign(['article_id']);
+            $table->dropForeign(['parent_id']);
         });
     }
 };
