@@ -12,6 +12,8 @@ Table comments {
 Table users {
   id uuid [primary key]
   username varchar
+  email varchar
+  password varchar
   role_id integer
   created_at timestamp
   updated_at timestamp
@@ -81,11 +83,11 @@ Table images {
 
 Table notifications {
   id integer [primary key]
-  recipient_id uuid [not null]          // usuario que recibe la notificación
-  sender_id uuid [not null]             // usuario que realizó la acción (like, comentario, etc.)
+  type varchar [not null]               // Tipo de notificación ("like", "new_article", etc.)
   notifiable_id integer [not null]      // ID del recurso afectado (artículo o comentario)
   notifiable_type varchar [not null]    // Tipo de recurso ("articles", "comments")
-  type varchar [not null]               // Tipo de notificación ("like", "new_article", etc.)
+  recipient_id uuid [not null]          // usuario que recibe la notificación
+  sender_id uuid [not null]             // usuario que realizó la acción (like, comentario, etc.)
   created_at timestamp
   updated_at timestamp
   Note: 'Notifica al usuario que recibió un like o una suscripción'

@@ -17,10 +17,12 @@ class Category extends Model
     ];
 
     // relations
+    // relation with articles
     function articles(): HasMany
     {
         return $this->hasMany(Article::class);
     }
+    // relation with users(many-to-many)
     function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class);

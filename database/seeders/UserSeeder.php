@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Admin;
 use App\Models\Category;
 use App\Models\User;
+use App\Models\Writer;
 use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
@@ -19,6 +21,12 @@ class UserSeeder extends Seeder
         User::factory(10)
             ->create()
             ->each(function ($user) use ($categories) {
+                if ($user->role == User::ROLE_ADMIN) {
+                    $poly = Admin::factory()->create();
+                } else {
+                    $poly = Writer::factory()->create();
+                }
+                $user->userable()->associate($poly)->save();
                 $categories_id = fake()->randomElements($categories, fake()->numberBetween(1, 3));
                 $user->categories()->attach($categories_id);
             });

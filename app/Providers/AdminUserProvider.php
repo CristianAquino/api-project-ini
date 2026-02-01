@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Admin;
 use App\Models\User;
 use Illuminate\Support\ServiceProvider;
 
@@ -23,7 +24,8 @@ class AdminUserProvider extends ServiceProvider
         //
         if (!User::where('email', 'admin@admin.com')->exists()) {
             // create admin
-            User::create([
+            $admin = Admin::factory()->create();
+            $admin->user()->create([
                 'name' => 'administrator',
                 'email' => 'admin@admin.com',
                 'password' => '12345678',
